@@ -1,13 +1,13 @@
-package awele.bot.demo.minmax;
+package awele.bot.demo.saligaud;
 
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
 /**
- * @author Alexandre Blansché
+ * @author Clément Lauer
  * Noeud d'un arbre MinMax
  */
-public abstract class MinMaxNode
+public abstract class MinMaxSaligaud
 {
     /** Numéro de joueur de l'IA */
     private static int player;
@@ -22,13 +22,13 @@ public abstract class MinMaxNode
     private double [] decision;
 
     /**
-     * Constructeur... 
+     * Constructeur...
      * @param board L'état de la grille de jeu
      * @param depth La profondeur du noeud
      * @param alpha Le seuil pour la coupe alpha
      * @param beta Le seuil pour la coupe beta
      */
-    public MinMaxNode (Board board, int depth, double alpha, double beta)
+    public MinMaxSaligaud (Board board, int depth, double alpha, double beta)
     {
         /* On crée un tableau des évaluations des coups à jouer pour chaque situation possible */
         this.decision = new double [Board.NB_HOLES];
@@ -49,19 +49,19 @@ public abstract class MinMaxNode
                     int score = copy.playMoveSimulationScore (copy.getCurrentPlayer (), decision);
                     copy = copy.playMoveSimulationBoard (copy.getCurrentPlayer (), decision);
                     /* Si la nouvelle situation de jeu est un coup qui met fin à la partie,
-                       on évalue la situation actuelle */   
+                       on évalue la situation actuelle */
                     if ((score < 0) ||
                             (copy.getScore (Board.otherPlayer (copy.getCurrentPlayer ())) >= 25) ||
                             (copy.getNbSeeds () <= 6))
                         this.decision [i] = this.diffScore (copy);
-                    /* Sinon, on explore les coups suivants */
+                        /* Sinon, on explore les coups suivants */
                     else
                     {
                         /* Si la profondeur maximale n'est pas atteinte */
-                        if (depth < MinMaxNode.maxDepth)
+                        if (depth < MinMaxSaligaud.maxDepth)
                         {
                             /* On construit le noeud suivant */
-                            MinMaxNode child = this.getNextNode (copy, depth + 1, alpha, beta);
+                            MinMaxSaligaud child = this.getNextNode (copy, depth + 1, alpha, beta);
                             /* On récupère l'évaluation du noeud fils */
                             this.decision [i] = child.getEvaluation ();
                         }
@@ -71,12 +71,12 @@ public abstract class MinMaxNode
                     }
                     /* L'évaluation courante du noeud est mise à jour, selon le type de noeud (MinNode ou MaxNode) */
                     this.evaluation = this.minmax (this.decision [i], this.evaluation);
-                    /* Coupe alpha-beta */ 
+                    /* Coupe alpha-beta */
                     if (depth > 0)
                     {
                         alpha = this.alpha (this.evaluation, alpha);
                         beta = this.beta (this.evaluation, beta);
-                    }                        
+                    }
                 }
                 catch (InvalidBotException e)
                 {
@@ -91,15 +91,15 @@ public abstract class MinMaxNode
     /**
      * Initialisation
      */
-    protected static void initialize (Board board, int maxDepth)
+    public static void initialize(Board board, int maxDepth)
     {
-        MinMaxNode.maxDepth = maxDepth;
-        MinMaxNode.player = board.getCurrentPlayer ();
+        MinMaxSaligaud.maxDepth = maxDepth;
+        MinMaxSaligaud.player = board.getCurrentPlayer ();
     }
 
     private int diffScore (Board board)
     {
-        return board.getScore (MinMaxNode.player) - board.getScore (Board.otherPlayer (MinMaxNode.player));
+        return board.getScore (MinMaxSaligaud.player) - board.getScore (Board.otherPlayer (MinMaxSaligaud.player));
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class MinMaxNode
      * @param beta Le seuil pour la coupe beta
      * @return Un noeud (MinNode ou MaxNode) du niveau suivant
      */
-    protected abstract MinMaxNode getNextNode (Board board, int depth, double alpha, double beta);
+    protected abstract MinMaxSaligaud getNextNode (Board board, int depth, double alpha, double beta);
 
     /**
      * L'évaluation du noeud
@@ -158,7 +158,7 @@ public abstract class MinMaxNode
      * L'évaluation de chaque coup possible pour le noeud
      * @return
      */
-    double [] getDecision ()
+    public double [] getDecision()
     {
         return this.decision;
     }

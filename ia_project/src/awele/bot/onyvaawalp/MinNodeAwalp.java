@@ -1,7 +1,5 @@
 package awele.bot.onyvaawalp;
 
-import awele.bot.demo.minmax.MaxNode;
-import awele.bot.demo.minmax.MinMaxNode;
 import awele.core.Board;
 
 public class MinNodeAwalp extends MinMaxNodeAwalp{
