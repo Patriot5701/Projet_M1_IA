@@ -1,25 +1,17 @@
-package awele.bot.demo.enfoirax;
+package awele.bot.demo.houlahoula;
 
 import awele.bot.DemoBot;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
-
-/**
- * Test de l'ajout de prises de décisions fatales
- * Légèrement + rapide, meilleure que celle du prof
- */
-public class Enfoirax extends DemoBot {
-
-    private EnfoiraxCategories data;
-
+public class Houlahoula extends DemoBot {
     /** Profondeur maximale */
     private static final int MAX_DEPTH = 6;
 
     /**
      * @throws InvalidBotException
      */
-    public Enfoirax () throws InvalidBotException
+    public Houlahoula () throws InvalidBotException
     {
         this.setBotName ("Enfoirax");
         this.addAuthor ("Clément Lauer");
@@ -37,12 +29,13 @@ public class Enfoirax extends DemoBot {
 
     @Override
     public double[] getDecision(Board board) {
-        MinMaxEnfoirax.initialize (board, Enfoirax.MAX_DEPTH);
-        return new MaxEnfoirax(board).getDecision ();
+        MinMaxHoulahoula.initialize (board, Houlahoula.MAX_DEPTH);
+        return new MaxHoulahoula(board).getDecision ();
     }
 
     @Override
     public void learn() {
-        this.data = new EnfoiraxCategories();
+
     }
 }
+

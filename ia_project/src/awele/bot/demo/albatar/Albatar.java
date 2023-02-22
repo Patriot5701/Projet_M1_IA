@@ -1,25 +1,20 @@
-package awele.bot.demo.enfoirax;
+package awele.bot.demo.albatar;
 
 import awele.bot.DemoBot;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
-
 /**
- * Test de l'ajout de prises de décisions fatales
- * Légèrement + rapide, meilleure que celle du prof
+ * test heuristique numero 3 : nb de trous adverses avec moins de 3 graines + coef de consecutivité
  */
-public class Enfoirax extends DemoBot {
-
-    private EnfoiraxCategories data;
-
+public class Albatar  extends DemoBot {
     /** Profondeur maximale */
     private static final int MAX_DEPTH = 6;
 
     /**
      * @throws InvalidBotException
      */
-    public Enfoirax () throws InvalidBotException
+    public Albatar () throws InvalidBotException
     {
         this.setBotName ("Enfoirax");
         this.addAuthor ("Clément Lauer");
@@ -37,12 +32,12 @@ public class Enfoirax extends DemoBot {
 
     @Override
     public double[] getDecision(Board board) {
-        MinMaxEnfoirax.initialize (board, Enfoirax.MAX_DEPTH);
-        return new MaxEnfoirax(board).getDecision ();
+        MinMaxAlbatar.initialize (board, Albatar.MAX_DEPTH);
+        return new MaxAlbatar(board).getDecision ();
     }
 
     @Override
     public void learn() {
-        this.data = new EnfoiraxCategories();
+
     }
 }
