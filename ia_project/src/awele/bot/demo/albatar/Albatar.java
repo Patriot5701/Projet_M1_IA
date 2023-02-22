@@ -16,7 +16,7 @@ public class Albatar  extends DemoBot {
      */
     public Albatar () throws InvalidBotException
     {
-        this.setBotName ("Enfoirax");
+        this.setBotName ("Albatar");
         this.addAuthor ("Clément Lauer");
     }
 

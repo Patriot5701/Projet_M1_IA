@@ -13,7 +13,7 @@ public class Houlahoula extends DemoBot {
      */
     public Houlahoula () throws InvalidBotException
     {
-        this.setBotName ("Enfoirax");
+        this.setBotName ("Houlahoula");
         this.addAuthor ("Clément Lauer");
     }
 

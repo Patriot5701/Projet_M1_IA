@@ -1,5 +1,6 @@
 package awele.bot.demo.houlahoula;
 
+import awele.bot.demo.albatar.MinMaxAlbatar;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
@@ -30,12 +31,11 @@ public abstract class MinMaxHoulahoula {
         this.decision = new double [Board.NB_HOLES];
         /* Initialisation de l'évaluation courante */
         this.evaluation = this.worst ();
-
         /* On parcourt toutes les coups possibles */
         for (int i = 0; i < Board.NB_HOLES; i++)
             /* Si le coup est jouable */
-            if (board.getPlayerHoles () [i] != 0){
-
+            if (board.getPlayerHoles () [i] != 0)
+            {
                 /* Sélection du coup à jouer */
                 double [] decision = new double [Board.NB_HOLES];
                 decision [i] = 1;
@@ -49,24 +49,10 @@ public abstract class MinMaxHoulahoula {
                        on évalue la situation actuelle */
                     if ((score < 0) ||
                             (copy.getScore (Board.otherPlayer (copy.getCurrentPlayer ())) >= 25) ||
-                            (copy.getNbSeeds () <= 6)){
-                        this.decision[i] = this.diffScore(copy);
-                    }else if((copy.getOpponentHoles()[0] == 0 && copy.getOpponentHoles()[2]==0) ||
-                            (copy.getOpponentHoles()[0]==1 && copy.getOpponentHoles()[1]<3) ||
-                            (copy.getOpponentHoles()[0] == 0 && copy.getOpponentHoles()[2]==0) ||
-                            (copy.getOpponentHoles()[0]==1 && copy.getOpponentHoles()[1]<3)){
-                        //on mettrait un coup fatal donc on met un giga nb car il faudra le maximiser (on veut le jouer)
-                        this.decision[i] = 100;
-                    }else if((copy.getPlayerHoles()[0] == 0 && copy.getPlayerHoles()[2]==0) ||
-                            (copy.getPlayerHoles()[0]==1 && copy.getPlayerHoles()[1]<3) ||
-                            (copy.getPlayerHoles()[0] == 0 && copy.getPlayerHoles()[2]==0) ||
-                            (copy.getPlayerHoles()[0]==1 && copy.getPlayerHoles()[1]<3)){
-                        // l'adversaire ns mettrait un coup fatal donc on met un giga nb car il faudra le minimiser (on veut pas le jouer)
-                        this.decision[i] = -100;
-                        /* si cases 1 et 3 == 0 alors mène à défaite et coupe */
-
+                            (copy.getNbSeeds () <= 6))
+                        this.decision [i] = this.diffScore (copy);
                         /* Sinon, on explore les coups suivants */
-                    }else
+                    else
                     {
                         /* Si la profondeur maximale n'est pas atteinte */
                         if (depth < MinMaxHoulahoula.maxDepth)
@@ -111,11 +97,20 @@ public abstract class MinMaxHoulahoula {
     private int diffScore (Board board)
     {
         int score = 0;
-        for(int i = 0; i<Board.NB_HOLES; i++){
-            if(board.getPlayerHoles()[i] > 11+6-i){
-                score += (board.getPlayerHoles()[i]*(i+1));
+        if(MinMaxHoulahoula.player == board.getCurrentPlayer()){
+            for(int i = 0; i<Board.NB_HOLES; i++){
+                if(board.getPlayerHoles()[i] > 11+6-i){
+                    score += (board.getPlayerHoles()[i]*(i+1));
+                }
+            }
+        }else{
+            for(int i = 0; i<Board.NB_HOLES; i++){
+                if(board.getOpponentHoles()[i] > 11+6-i){
+                    score += (board.getOpponentHoles()[i]*(i+1));
+                }
             }
         }
+
         return score;
     }
 

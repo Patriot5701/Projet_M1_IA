@@ -61,7 +61,6 @@ public class Board
     }
     
     /**
-     * @param player L'index du joueur courant
      * @return Le nombre de graines encore en jeu du côté du joueur courant
      */
     public int getPlayerSeeds ()
@@ -73,7 +72,6 @@ public class Board
     }
     
     /**
-     * @param player L'index du joueur adverse
      * @return Le nombre de graines encore en jeu du côté du joueur adverse
      */
     public int getOpponentSeeds ()

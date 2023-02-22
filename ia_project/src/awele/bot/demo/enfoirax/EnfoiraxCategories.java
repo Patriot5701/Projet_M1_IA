@@ -25,8 +25,6 @@ public class EnfoiraxCategories {
                 }
             }
         }
-        System.out.print(this.WINid+"\n");
-        System.out.print(this.LOSTid);
 
 
     }
