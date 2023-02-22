@@ -37,11 +37,6 @@ public abstract class MinMaxEnfoirax
         /* Initialisation de l'évaluation courante */
         this.evaluation = this.worst ();
 
-        System.out.println("id "+board.getCurrentPlayer());
-
-
-
-
         /* On parcourt toutes les coups possibles */
         for (int i = 0; i < Board.NB_HOLES; i++)
             /* Si le coup est jouable */
@@ -60,15 +55,22 @@ public abstract class MinMaxEnfoirax
                        on évalue la situation actuelle */
                     if ((score < 0) ||
                             (copy.getScore (Board.otherPlayer (copy.getCurrentPlayer ())) >= 25) ||
-                            (copy.getNbSeeds () <= 6) ||
-                            (copy.getOpponentHoles()[0] == 0 && copy.getOpponentHoles()[2]==0) ||
-                            (copy.getOpponentHoles()[0]==1 && copy.getOpponentHoles()[1]<3)) {
+                            (copy.getNbSeeds () <= 6)){
                         this.decision[i] = this.diffScore(copy);
-
+                    }else if((copy.getOpponentHoles()[0] == 0 && copy.getOpponentHoles()[2]==0) ||
+                            (copy.getOpponentHoles()[0]==1 && copy.getOpponentHoles()[1]<3) ||
+                            (copy.getOpponentHoles()[0] == 0 && copy.getOpponentHoles()[2]==0) ||
+                            (copy.getOpponentHoles()[0]==1 && copy.getOpponentHoles()[1]<3)){
+                        //on mettrait un coup fatal donc on met un giga nb car il faudra le maximiser (on veut le jouer)
+                        this.decision[i] = 100;
+                    }else if((copy.getPlayerHoles()[0] == 0 && copy.getPlayerHoles()[2]==0) ||
+                            (copy.getPlayerHoles()[0]==1 && copy.getPlayerHoles()[1]<3) ||
+                            (copy.getPlayerHoles()[0] == 0 && copy.getPlayerHoles()[2]==0) ||
+                            (copy.getPlayerHoles()[0]==1 && copy.getPlayerHoles()[1]<3)){
+                        // l'adversaire ns mettrait un coup fatal donc on met un giga nb car il faudra le minimiser (on veut pas le jouer)
+                        this.decision[i] = -100;
                         /* si cases 1 et 3 == 0 alors mène à défaite et coupe */
-                    }else if((copy.getPlayerHoles()[0]==0 && copy.getPlayerHoles()[2]==0) ||
-                            (copy.getPlayerHoles()[0]==1 && copy.getPlayerHoles()[1]<3)) {
-                        this.decision[i] = -10;
+
                     /* Sinon, on explore les coups suivants */
                     }else
                     {

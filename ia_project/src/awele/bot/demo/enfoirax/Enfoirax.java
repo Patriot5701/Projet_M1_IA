@@ -39,8 +39,8 @@ public class Enfoirax extends DemoBot {
 
     @Override
     public double[] getDecision(Board board) {
-        MinMaxSaligaud.initialize (board, Enfoirax.MAX_DEPTH);
-        return new MaxSaligaud(board).getDecision ();
+        MinMaxEnfoirax.initialize (board, Enfoirax.MAX_DEPTH);
+        return new MaxEnfoirax(board).getDecision ();
     }
 
     @Override
