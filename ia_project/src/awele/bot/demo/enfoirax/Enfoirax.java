@@ -14,7 +14,7 @@ public class Enfoirax extends DemoBot {
     private EnfoiraxCategories data;
 
     /** Profondeur maximale */
-    private static final int MAX_DEPTH = 6;
+    private static final int MAX_DEPTH = 7;
 
     /**
      * @throws InvalidBotException
