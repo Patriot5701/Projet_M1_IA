@@ -1,20 +1,21 @@
-package awele.bot.demo.houlahoula;
+package awele.bot.demo.onyvaawalp_prof;
 
-import awele.bot.DemoBot;
+import awele.bot.CompetitorBot;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
-public class Houlahoula extends DemoBot {
+public class OnYVaAwalpProf extends CompetitorBot {
     /** Profondeur maximale */
     private static final int MAX_DEPTH = 6;
 
     /**
      * @throws InvalidBotException
      */
-    public Houlahoula () throws InvalidBotException
+    public OnYVaAwalpProf () throws InvalidBotException
     {
-        this.setBotName ("Houlahoula");
+        this.setBotName ("OnYVaAwalpProf");
         this.addAuthor ("Clément Lauer");
+        this.addAuthor ("Bastien Pazzaglia");
     }
 
     @Override
@@ -29,8 +30,8 @@ public class Houlahoula extends DemoBot {
 
     @Override
     public double[] getDecision(Board board) {
-        MinMaxHoulahoula.initialize (board, Houlahoula.MAX_DEPTH);
-        return new MaxHoulahoula(board).getDecision ();
+        MinMaxNodeAwalpProf.initialize (board, OnYVaAwalpProf.MAX_DEPTH);
+        return new MaxNodeAwalpProf(board).getDecision ();
     }
 
     @Override
@@ -38,4 +39,3 @@ public class Houlahoula extends DemoBot {
 
     }
 }
-

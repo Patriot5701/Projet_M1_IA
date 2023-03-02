@@ -9,7 +9,7 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      */
     MaxNodeAwalp (Board board)
     {
-        this (board, 0, -Double.MAX_VALUE, Double.MAX_VALUE);
+        this (board, (byte) 0, (byte) -Byte.MAX_VALUE, Byte.MAX_VALUE);
     }
 
     /**
@@ -18,7 +18,7 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @param depth La profondeur du noeud
      * @param alphabeta Le seuil pour la coupe alpha-beta
      */
-    MaxNodeAwalp (Board board, int depth, double alpha, double beta)
+    MaxNodeAwalp (Board board, byte depth, byte alpha, byte beta)
     {
         super (board, depth, alpha, beta);
     }
@@ -30,9 +30,9 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return Le max entre deux valeurs, selon le type de noeud
      */
     @Override
-    protected double minmax (double eval1, double eval2)
+    protected byte minmax (byte eval1, byte eval2)
     {
-        return Math.max (eval1, eval2);
+        return (byte) Math.max (eval1, eval2);
     }
 
     /**
@@ -44,7 +44,7 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return Un booléen qui indique s'il faut faire une coupe alpha-beta
      */
     @Override
-    protected boolean alphabeta (double eval, double alpha, double beta)
+    protected boolean alphabeta (byte eval, byte alpha, byte beta)
     {
         return eval >= beta;
     }
@@ -58,7 +58,7 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return Un noeud MinNode du niveau suivant
      */
     @Override
-    protected MinMaxNodeAwalp getNextNode (Board board, int depth, double alpha, double beta)
+    protected MinMaxNodeAwalp getNextNode (Board board, byte depth, byte alpha, byte beta)
     {
         return new MinNodeAwalp(board, depth, alpha, beta);
     }
@@ -70,9 +70,9 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return
      */
     @Override
-    protected double alpha (double evaluation, double alpha)
+    protected byte alpha (byte evaluation, byte alpha)
     {
-        return Math.max (evaluation, alpha);
+        return (byte) Math.max (evaluation, alpha);
     }
 
     /**
@@ -82,15 +82,15 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return
      */
     @Override
-    protected double beta (double evaluation, double beta)
+    protected byte beta (byte evaluation, byte beta)
     {
         return beta;
     }
 
     /** Pire score : une petite valeur */
     @Override
-    protected double worst ()
+    protected byte worst ()
     {
-        return -Double.MAX_VALUE;
+        return -Byte.MAX_VALUE;
     }
 }

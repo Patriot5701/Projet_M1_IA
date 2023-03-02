@@ -1,10 +1,14 @@
-package awele.bot.demo.houlahoula;
+package awele.bot.demo.onyvaawalp_prof;
 
-import awele.bot.demo.albatar.MinMaxAlbatar;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
-public abstract class MinMaxHoulahoula {
+/**
+ * @author Alexandre Blansché
+ * Noeud d'un arbre MinMax
+ */
+public abstract class MinMaxNodeAwalpProf
+{
     /** Numéro de joueur de l'IA */
     private static int player;
 
@@ -19,14 +23,13 @@ public abstract class MinMaxHoulahoula {
 
     /**
      * Constructeur...
-     *
      * @param board L'état de la grille de jeu
      * @param depth La profondeur du noeud
      * @param alpha Le seuil pour la coupe alpha
-     * @param beta  Le seuil pour la coupe beta
+     * @param beta Le seuil pour la coupe beta
      */
-    public MinMaxHoulahoula(Board board, int depth, double alpha, double beta) {
-
+    public MinMaxNodeAwalpProf (Board board, int depth, double alpha, double beta)
+    {
         /* On crée un tableau des évaluations des coups à jouer pour chaque situation possible */
         this.decision = new double [Board.NB_HOLES];
         /* Initialisation de l'évaluation courante */
@@ -55,10 +58,10 @@ public abstract class MinMaxHoulahoula {
                     else
                     {
                         /* Si la profondeur maximale n'est pas atteinte */
-                        if (depth < MinMaxHoulahoula.maxDepth)
+                        if (depth < MinMaxNodeAwalpProf.maxDepth)
                         {
                             /* On construit le noeud suivant */
-                            MinMaxHoulahoula child = this.getNextNode (copy, depth + 1, alpha, beta);
+                            MinMaxNodeAwalpProf child = this.getNextNode (copy, depth + 1, alpha, beta);
                             /* On récupère l'évaluation du noeud fils */
                             this.decision [i] = child.getEvaluation ();
                         }
@@ -88,30 +91,15 @@ public abstract class MinMaxHoulahoula {
     /**
      * Initialisation
      */
-    public static void initialize(Board board, int maxDepth)
+    protected static void initialize (Board board, int maxDepth)
     {
-        MinMaxHoulahoula.maxDepth = maxDepth;
-        MinMaxHoulahoula.player = board.getCurrentPlayer ();
+        MinMaxNodeAwalpProf.maxDepth = maxDepth;
+        MinMaxNodeAwalpProf.player = board.getCurrentPlayer ();
     }
 
     private int diffScore (Board board)
     {
-        int score = 0;
-        if(MinMaxHoulahoula.player == board.getCurrentPlayer()){
-            for(int i = 0; i<Board.NB_HOLES; i++){
-                if(board.getPlayerHoles()[i] > 11+6-i){
-                    score += (board.getPlayerHoles()[i]*(i+1));
-                }
-            }
-        }else{
-            for(int i = 0; i<Board.NB_HOLES; i++){
-                if(board.getOpponentHoles()[i] > 11+6-i){
-                    score += (board.getOpponentHoles()[i]*(i+1));
-                }
-            }
-        }
-
-        return score;
+        return board.getScore (MinMaxNodeAwalpProf.player) - board.getScore (Board.otherPlayer (MinMaxNodeAwalpProf.player));
     }
 
     /**
@@ -155,7 +143,7 @@ public abstract class MinMaxHoulahoula {
      * @param beta Le seuil pour la coupe beta
      * @return Un noeud (MinNode ou MaxNode) du niveau suivant
      */
-    protected abstract MinMaxHoulahoula getNextNode (Board board, int depth, double alpha, double beta);
+    protected abstract MinMaxNodeAwalpProf getNextNode (Board board, int depth, double alpha, double beta);
 
     /**
      * L'évaluation du noeud
@@ -170,7 +158,7 @@ public abstract class MinMaxHoulahoula {
      * L'évaluation de chaque coup possible pour le noeud
      * @return
      */
-    public double [] getDecision()
+    double [] getDecision ()
     {
         return this.decision;
     }

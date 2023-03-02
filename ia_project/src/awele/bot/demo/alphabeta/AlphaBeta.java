@@ -1,6 +1,10 @@
 package awele.bot.demo.alphabeta;
 
+import awele.bot.Bot;
 import awele.bot.DemoBot;
+import awele.bot.demo.random.RandomBot;
+import awele.bot.onyvaawalp.OnYVaAwalp;
+import awele.core.Awele;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
@@ -19,7 +23,6 @@ public class AlphaBeta extends DemoBot {
 
     @Override
     public void initialize() {
-
     }
 
     @Override
@@ -35,6 +38,23 @@ public class AlphaBeta extends DemoBot {
 
     @Override
     public void learn() {
+        try{
+            Bot otherBot = (Bot) OnYVaAwalp.class.getConstructors()[0].newInstance();
+            Awele awele = new Awele(this, otherBot);
+            awele.play();
+        }catch(Exception e){
+            RandomBot random = null;
+            try
+            {
+                random = new RandomBot ();
+                random.learn ();
+                Awele awele = new Awele(this, random);
+                awele.play();
+            }
+            catch (Exception e2)
+            {
+            }
+        }
 
     }
 

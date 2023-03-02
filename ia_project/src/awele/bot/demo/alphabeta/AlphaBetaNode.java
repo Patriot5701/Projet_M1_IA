@@ -1,6 +1,5 @@
 package awele.bot.demo.alphabeta;
 
-import awele.bot.onyvaawalp.MinMaxNodeAwalp;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
@@ -18,6 +17,14 @@ public class AlphaBetaNode {
         this.decision = new int [Board.NB_HOLES];
         /* initialisation de l'état courant */
         this.evaluation = worst(isMax);
+
+        String key = getKey(board);
+        // Check the transposition table for an existing evaluation
+        if (AlphaBetaData.getInstance().getTranspositionTable().containsKey(key)) {
+            this.evaluation = AlphaBetaData.getInstance().getTranspositionTable().get(key);
+            return;
+        }
+
         /* On parcourt toutes les coups possibles */
         for(int i = 0; i<Board.NB_HOLES; i++) {
             /* Si le coup est jouable */
@@ -55,13 +62,17 @@ public class AlphaBetaNode {
                     }
                     /* L'évaluation courante du noeud est mise à jour, selon le type de noeud (MinNode ou MaxNode) */
                     this.evaluation = this.minmax(this.decision [i], this.evaluation, isMax);
+
+                    AlphaBetaData.getInstance().put(key, this.evaluation);
+
+
                     /* Coupe alpha-beta */
                     if (depth > 0)
                     {
                         if(isMax){
-                            alpha = this.alpha(this.evaluation, alpha);
+                            alpha = (evaluation >= alpha) ? evaluation : alpha;
                         }else{
-                            beta = this.beta(this.evaluation, beta);
+                            beta = (evaluation <= beta) ? evaluation : beta;
                         }
                     }
                 }
@@ -73,32 +84,27 @@ public class AlphaBetaNode {
     }
 
     private int minmax(int decision, int evaluation, boolean isMax){
-        if(isMax){
-            return Math.max (decision, evaluation);
-        }else{
-            return Math.min(decision, evaluation);
-        }
-    }
-
-    private int alpha(int evaluation, int alpha){
-        return Math.max (evaluation, alpha);
-    }
-
-    private int beta(int evaluation, int beta){
-        return Math.min (evaluation, beta);
+        return isMax ? Math.max(decision, evaluation) : Math.min(decision, evaluation);
     }
 
     private int worst(boolean isMax){
-        if(isMax){
-            return -Integer.MAX_VALUE;
-        }else {
-            return Integer.MAX_VALUE;
-        }
+        return isMax ? -Integer.MAX_VALUE : Integer.MAX_VALUE;
     }
     private int heuristique (Board board)
     {
-        return (board.getScore (AlphaBetaNode.player) - board.getScore (Board.otherPlayer (AlphaBetaNode.player)));
+        return (board.getScore (awele.bot.demo.alphabeta.AlphaBetaNode.player) - board.getScore (Board.otherPlayer (awele.bot.demo.alphabeta.AlphaBetaNode.player)));
     }
+
+    private String getKey(Board board){
+        String key = "";
+        for(int i = 0; i<board.getPlayerHoles().length;i++){
+            key+=board.getPlayerHoles()[i];
+            key+=board.getOpponentHoles()[i];
+        }
+        return key;
+    }
+
+
 
     public double[] getDecision(){
         return intArrayToDoubleArray(this.decision);
@@ -113,16 +119,17 @@ public class AlphaBetaNode {
      */
     protected static void initialize (Board board, int maxDepth)
     {
-        AlphaBetaNode.maxDepth = maxDepth;
-        AlphaBetaNode.player = board.getCurrentPlayer ();
+        awele.bot.demo.alphabeta.AlphaBetaNode.maxDepth = maxDepth;
+        awele.bot.demo.alphabeta.AlphaBetaNode.player = board.getCurrentPlayer ();
     }
 
-    private double[] intArrayToDoubleArray(int[] ints){
+    private static double[] intArrayToDoubleArray(int[] ints){
         double[] array = new double[ints.length];
         for(int i = 0; i<ints.length;i++) {
             array[i] = ints[i];
         }
         return array;
     }
+
 
 }
