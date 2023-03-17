@@ -1,13 +1,13 @@
-package awele.bot.onyvaawalp;
+package awele.bot.competitor.rabbiJacbot;
 
 import awele.core.Board;
 
-public class MaxNodeAwalp extends MinMaxNodeAwalp{
+public class MaxNodeRabbiJacbot extends MinMaxNodeRabbiJacbot{
     /**
      * Constructeur pour un noeud initial
      * @param board La situation de jeu pour laquelle il faut prendre une décision
      */
-    MaxNodeAwalp (Board board)
+    MaxNodeRabbiJacbot (Board board)
     {
         this (board, (byte) 0, (byte) -Byte.MAX_VALUE, Byte.MAX_VALUE);
     }
@@ -16,9 +16,8 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * Constructeur d'un noeud interne
      * @param board La situation de jeu pour le noeud
      * @param depth La profondeur du noeud
-     * @param alphabeta Le seuil pour la coupe alpha-beta
      */
-    MaxNodeAwalp (Board board, byte depth, byte alpha, byte beta)
+    MaxNodeRabbiJacbot (Board board, byte depth, byte alpha, byte beta)
     {
         super (board, depth, alpha, beta);
     }
@@ -58,9 +57,9 @@ public class MaxNodeAwalp extends MinMaxNodeAwalp{
      * @return Un noeud MinNode du niveau suivant
      */
     @Override
-    protected MinMaxNodeAwalp getNextNode (Board board, byte depth, byte alpha, byte beta)
+    protected MinMaxNodeRabbiJacbot getNextNode (Board board, byte depth, byte alpha, byte beta)
     {
-        return new MinNodeAwalp(board, depth, alpha, beta);
+        return new MinNodeRabbiJacbot(board, depth, alpha, beta);
     }
 
     /**
