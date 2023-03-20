@@ -4,12 +4,17 @@ import awele.bot.CompetitorBot;
 import awele.core.Board;
 import awele.core.InvalidBotException;
 
+/**
+ * @author Clement Lauer
+ * @author Bastien Pazzaglia
+ * Bot Rabbi JacBot
+ */
 public class RabbiJacbot extends CompetitorBot {
-    /** Profondeur maximale */
+    /** Profondeur de base */
     private static final byte MAX_DEPTH = 8;
 
-    /** Taille maximale de la table de transposition */
-    private static final byte MAX_SIZE_SAVE = 75;
+    /** Taille maximale de la table de stockage */
+    private static final byte MAX_SIZE_SAVE = 70;
 
 
 
@@ -23,11 +28,17 @@ public class RabbiJacbot extends CompetitorBot {
         this.addAuthor ("Bastien Pazzaglia");
     }
 
+    /**
+     * Méthode d'initialisation vide
+     */
     @Override
     public void initialize() {
 
     }
 
+    /**
+     * Méthode de fin vide
+     */
     @Override
     public void finish() {
 
@@ -39,6 +50,9 @@ public class RabbiJacbot extends CompetitorBot {
         return new MaxNodeRabbiJacbot(board).getDecision ();
     }
 
+    /**
+     * Méthode d'apprentissage vide
+     */
     @Override
     public void learn() {
 

@@ -6,7 +6,8 @@ import awele.core.InvalidBotException;
 import java.util.HashMap;
 
 /**
- * @author Alexandre Blansché
+ * @author Clement Lauer
+ * @author Bastien Pazzaglia
  * Noeud d'un arbre MinMax
  */
 public abstract class MinMaxNodeRabbiJacbot
@@ -20,10 +21,10 @@ public abstract class MinMaxNodeRabbiJacbot
     /** L'évaluation du noeud */
     private byte evaluation;
 
-    /** Table de transposition qui stock la valeur de certains noeuds */
+    /** Table de stockage qui stocke la valeur de certains noeuds */
     private static HashMap<Board, SaveTableEntry> saveTable;
 
-    /** Taille maximum de la table de transposition */
+    /** Taille maximum de la table de stockage */
     private static int maxSizeTable;
 
     /** Évaluation des coups selon MinMax */
@@ -44,7 +45,7 @@ public abstract class MinMaxNodeRabbiJacbot
 
         byte alphaOriginal = alpha;
 
-        /* On parcourt toutes les coups possibles */
+        /* On parcourt toutes les coups possibles dans l'ordre inverse pour avoir en priorité les coups les plus proches de l'adversaire */
         for (int i = Board.NB_HOLES - 1; i >= 0; i--) {
             /* Si le coup est jouable */
             if (board.getPlayerHoles()[i] != 0) {
@@ -57,10 +58,10 @@ public abstract class MinMaxNodeRabbiJacbot
                     int score = copy.playMoveSimulationScore(copy.getCurrentPlayer(), byteArrayToDoubleArray(decision));
                     copy = copy.playMoveSimulationBoard(copy.getCurrentPlayer(), byteArrayToDoubleArray(decision));
 
-                    /* On test l'appartenance du coup dans la table de transposition*/
+                    /* On test l'appartenance du coup dans la table de stockage*/
                     SaveTableEntry entry = MinMaxNodeRabbiJacbot.saveTable.get(copy);
 
-                    /* Si le coup existe dans la table de transposition, on vérifie s'il est exploitable*/
+                    /* Si le coup existe dans la table de stockage, on vérifie s'il est exploitable*/
                     if (entry != null && entry.depth >= depth) {
                         if (entry.flag == SaveTableEntry.EXACT) {
                             this.decision[i] = entry.value;
@@ -81,7 +82,7 @@ public abstract class MinMaxNodeRabbiJacbot
 
 
                 /* Si la nouvelle situation de jeu est un coup qui met fin à la partie,
-                   on évalue la situation actuelle */
+                   on évalue la situation actuelle selon les scores */
                     if ((score < 0) ||
                             (copy.getScore(Board.otherPlayer(copy.getCurrentPlayer())) >= 25) ||
                             (copy.getNbSeeds() <= 6))
@@ -95,7 +96,7 @@ public abstract class MinMaxNodeRabbiJacbot
                             /* On récupère l'évaluation du noeud fils */
                             this.decision[i] = child.getEvaluation();
                         }
-                        /* Sinon (si la profondeur maximale est atteinte), on évalue la situation actuelle */
+                        /* Sinon (si la profondeur maximale est atteinte), on évalue la situation actuelle*/
                         else
                             this.decision[i] = heuristic(copy, depth);
                     }
@@ -114,7 +115,7 @@ public abstract class MinMaxNodeRabbiJacbot
                 }
             }
 
-            /* Mis à jour de la table de transposition*/
+            /* Mis à jour de la table de stockage*/
             if(MinMaxNodeRabbiJacbot.saveTable.size() == MinMaxNodeRabbiJacbot.maxSizeTable)
                 MinMaxNodeRabbiJacbot.saveTable.clear();
 
@@ -132,19 +133,31 @@ public abstract class MinMaxNodeRabbiJacbot
     /**
      * Initialisation
      */
-    protected static void initialize (Board board, byte maxDepth, byte maxSizeTable)
+    protected static void initialize (Board board, byte depth, byte maxSizeTable)
     {
-        MinMaxNodeRabbiJacbot.maxDepth = (byte) (maxDepth + (int)Math.round(48.0/board.getNbSeeds()));
+        /* Initialisation de la profondeur : profondeur originelle + (nombre_de_graines_totales / nombre_de_graines_restantes) */
+        MinMaxNodeRabbiJacbot.maxDepth = (byte) (depth + (int)Math.round(48.0/board.getNbSeeds()));
         MinMaxNodeRabbiJacbot.player = board.getCurrentPlayer ();
         MinMaxNodeRabbiJacbot.saveTable = new HashMap<Board, SaveTableEntry>();
         MinMaxNodeRabbiJacbot.maxSizeTable = maxSizeTable;
     }
 
+    /**
+     * Première heuristique : différence de scores
+     * @param board
+     * @return
+     */
     private byte diffScore (Board board)
     {
         return (byte) (board.getScore (MinMaxNodeRabbiJacbot.player) - board.getScore (Board.otherPlayer (MinMaxNodeRabbiJacbot.player)));
     }
 
+    /**
+     * Heuristique complète
+     * @param board
+     * @param depth
+     * @return
+     */
     private byte heuristic(Board board, int depth){
 
         byte scoreSeeds = 0;
@@ -152,18 +165,21 @@ public abstract class MinMaxNodeRabbiJacbot
         byte playerKrou = 0;
         byte opponentKrou = 0;
 
-        boolean isPair;
-        isPair = (depth%2 == 0) ? true : false;
+        //Détermine si coup max ou coup min
+        boolean isMax;
+        isMax = (depth%2 == 0) ? true : false;
 
         for(int i = 0; i < Board.NB_HOLES; i++) {
+            //Vérification des cases en danger
             if(board.getPlayerHoles()[i] < 3 ) {
-                scoreSeeds = (byte) (isPair ? (scoreSeeds+1) : (scoreSeeds-1));
+                scoreSeeds = (byte) (isMax ? (scoreSeeds+1) : (scoreSeeds-1));
             }
 
             if(board.getOpponentHoles()[i] < 3 ) {
-                scoreSeeds = (byte) (isPair ? (scoreSeeds-1) : (scoreSeeds+1));
+                scoreSeeds = (byte) (isMax ? (scoreSeeds-1) : (scoreSeeds+1));
             }
 
+            //Vérification de la présence de Krous
             if(board.getPlayerHoles()[i] >= 11) {
                 playerKrou = 1;
             }
@@ -238,7 +254,11 @@ public abstract class MinMaxNodeRabbiJacbot
         return byteArrayToDoubleArray(this.decision);
     }
 
-
+    /**
+     * Convertit les tableaux de bytes en tableaux de Double
+     * @param bytes
+     * @return
+     */
     protected static double[] byteArrayToDoubleArray(byte[] bytes){
         double[] array = new double[bytes.length];
         for(int i = 0; i<bytes.length;i++) {
